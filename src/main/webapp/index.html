@@ -43,7 +43,9 @@
                                     document.getElementById("value").style.background = '#baffc5';
                                     document.getElementById("value").value = json.key;
                                 } else {
-                                    alert("Nothing with key " + key);
+                                    if(!auto) {
+                                        alert("Nothing with key " + key);
+                                    }
                                 }
                             }
                         })
