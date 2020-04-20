@@ -36,16 +36,16 @@
                         .then(response => response.json())
                         .then(json => {
 
-                                if (auto && json.key !== value) {
-                                    document.getElementById("value").style.background = '#e69a9a';
+                            if (document.getElementById("value") === document.activeElement && value !== json.key) {
+                                document.getElementById("value").style.background = '#e69a9a';
+                            } else {
+                                if(json.key !== null && json.key !== "null") {
+                                    document.getElementById("value").style.background = '#baffc5';
+                                    document.getElementById("value").value = json.key;
                                 } else {
-                                    if(json.key !== null && json.key !== "null") {
-                                        document.getElementById("value").style.background = '#baffc5';
-                                        document.getElementById("value").value = json.key;
-                                    } else {
-                                        alert("Nothing with key " + key);
-                                    }
+                                    alert("Nothing with key " + key);
                                 }
+                            }
                         })
                         .catch(error => {
                             console.error(error);
@@ -88,7 +88,7 @@
 </div>
 <div>
     <label>Value:</label>
-    <textarea name="value" id="value" rows="5" cols="50"></textarea>
+    <textarea name="value" id="value" rows="5" cols="50" onkeypress="this.style.background = '#f9ffab'"></textarea>
 </div>
 
 <button onclick="load(false)">Load</button>
