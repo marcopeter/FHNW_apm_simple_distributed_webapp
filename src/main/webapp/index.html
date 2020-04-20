@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>APM: Simple Distributed Webapp</title>
+
+    <style>
+        body    { font-family: sans-serif; }
+        label   { width: 100px; display: inline-block; }
+        button  { padding: 10px; }
+    </style>
+
+    <script>
+
+        (function() {
+            fetch("http://192.168.167.80:8080/simple_distributed_app/servlet/getHostname")
+                .then(response => response.json())
+                .then(json => {
+                    document.getElementById("hostname").innerHTML = json.hostname;
+                })
+                .catch(erro => {
+                    console.log(erro);
+                });
+
+            setInterval(load, 10000, true);
+        }) ();
+
+        function load(auto = false) {
+            let element = document.getElementById("key");
+            let value = document.getElementById("value").value;
+
+            if(typeof(element) != 'undefined' && element != null) {
+                let key = document.getElementById("key").value;
+                if (key !== null && key !== "") {
+                    fetch("http://192.168.167.80:8080/simple_distributed_app/servlet/?key=" + key)
+                        .then(response => response.json())
+                        .then(json => {
+
+                                if (auto && json.key !== value) {
+                                    document.getElementById("value").style.background = '#e69a9a';
+                                } else {
+                                    if(json.key !== null && json.key !== "null") {
+                                        document.getElementById("value").style.background = '#baffc5';
+                                        document.getElementById("value").value = json.key;
+                                    } else {
+                                        alert("Nothing with key " + key);
+                                    }
+                                }
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                }
+            }
+        }
+
+        function store() {
+            let key = document.getElementById("key").value;
+            let value = document.getElementById("value").value;
+            let request = new Request("http://192.168.167.80:8080/simple_distributed_app/servlet/?key="+key+"&value="+value, {
+                method: 'PUT',
+                headers: new Headers({
+                    'Content-Type': 'application/json'
+                })
+            });
+
+            fetch(request);
+            document.getElementById("value").style.background = '#baffc5';
+        }
+
+
+
+    </script>
+
+</head>
+<body>
+<h1>APM: Simple Distributed Webapp</h1>
+
+<h2>Status</h2>
+<div>It works!</div>
+<div>Host: <span style="font-weight: bold" id="hostname"></span> is up and running!</div>
+
+<h2>Awesome Key-Value Store</h2>
+
+<div>
+    <label>Key:</label>
+    <input name="key" id="key"/>
+</div>
+<div>
+    <label>Value:</label>
+    <textarea name="value" id="value" rows="5" cols="50"></textarea>
+</div>
+
+<button onclick="load(false)">Load</button>
+<button onclick="store()">Store</button>
+</body>
+</html>
