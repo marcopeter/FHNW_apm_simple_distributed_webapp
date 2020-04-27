@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
 public class BasicServlet extends HttpServlet {
 
 	private final Logger logger = Logger.getLogger(this.getClass());
-	private LocalStorage localStorage = new LocalStorage();
+	private ClusterStorage localStorage = new ClusterStorage();
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json; charset=utf-8");
