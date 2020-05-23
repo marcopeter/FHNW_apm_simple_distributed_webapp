@@ -18,7 +18,8 @@ import org.apache.log4j.Logger;
 public class BasicServlet extends HttpServlet {
 
 	private final Logger logger = Logger.getLogger(this.getClass());
-	private ClusterStorage localStorage = new ClusterStorage();
+	private ClusterStorage clusterStorage = new ClusterStorage();
+	private CachedStorage cachedStorage = new CachedStorage(100, clusterStorage);
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("application/json; charset=utf-8");
@@ -32,7 +33,7 @@ public class BasicServlet extends HttpServlet {
 		// curl  http://192.168.167.80:8080/simple_distributed_app/servlet/?key=42
 		} else {
 			String key = request.getParameter("key");
-			String value = localStorage.load(Integer.parseInt(key));
+			String value = clusterStorage.load(Integer.parseInt(key));
 			//writer.append(value);
 			writer.append("{\"key\": \"" + value + "\"}");
 		}
@@ -40,7 +41,7 @@ public class BasicServlet extends HttpServlet {
 
 	// curl -X PUT http://192.168.167.80:8080/simple_distributed_app/servlet/?key=42&value=Hello
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		localStorage.store(Integer.parseInt(request.getParameter("key")), request.getParameter("value"));
+		clusterStorage.store(Integer.parseInt(request.getParameter("key")), request.getParameter("value"));
 
 	}
 

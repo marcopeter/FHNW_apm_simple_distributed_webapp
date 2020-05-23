@@ -39,6 +39,10 @@ public class ClusterStorage implements Storage {
         return storage.get(id);
     }
 
+    public boolean containsKey(int id) {
+        return storage.containsKey(id);
+    }
+
     @Override
     public ClusterStatus getCurrentClusterStatus() {
         // return fully functional if we have more than one cluster node
